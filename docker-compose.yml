@@ -1,15 +1,16 @@
-version: "3"
+version: "3.8"
 
 services:
-
   celery_worker:
     restart: always
-    volumes:
-      - ./:/api
     build:
       context: .
+    volumes:
+      - ./:/api
     env_file:
       - .env
+    cpus: 1.0
+    mem_limit: "512M"
     command: celery -A app.worker worker --loglevel=INFO
     depends_on:
       - redis
@@ -27,6 +28,8 @@ services:
     build: .
     ports:
       - "8088:8080"
+    cpus: 1.0
+    mem_limit: "512M"
     volumes:
       - ./:/api
     environment:
