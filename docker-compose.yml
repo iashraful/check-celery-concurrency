@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+
+  celery_worker:
+    restart: always
+    volumes:
+      - ./:/api
+    build:
+      context: .
+    env_file:
+      - .env
+    command: celery -A app.worker worker --loglevel=INFO
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "6382:6379"
+    env_file:
+      - .env
+    command: redis-server
+
+  api:
+    restart: always
+    build: .
+    ports:
+      - "8088:8080"
+    volumes:
+      - ./:/api
+    environment:
+      DEBUG: "true"
+    env_file:
+      - .env
+    command: sh -c "uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8080"
+    depends_on:
+      - celery_worker
