@@ -43,6 +43,7 @@ celery -A config.worker worker --pool=evemtlet --concurrency=500 --loglevel=INFO
 * `--concurrency=500` means you can able to handle 500 concurrent tasks. So, you can update the value from here.
 
 ### How to run?
+* Copy `.env.example` to `.env`
 * `docker compose up --build -d`
 * `http://localhost:8088` is the FastAPI application.
 * `http://localhost:8089` is the Locust(Load tesing tool).
