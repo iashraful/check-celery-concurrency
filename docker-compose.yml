@@ -11,7 +11,7 @@ services:
       - .env
     cpus: 0.25
     mem_limit: "512M"
-    command: celery -A config.worker worker --pool=gevent --concurrency=500 --loglevel=INFO
+    command: celery -A config.worker worker --pool=eventlet --concurrency=500 --loglevel=INFO
     depends_on:
       - redis
 
