@@ -9,9 +9,9 @@ services:
       - ./:/api
     env_file:
       - .env
-    cpus: 1.0
+    cpus: 0.25
     mem_limit: "512M"
-    command: celery -A app.worker worker --loglevel=INFO
+    command: celery -A config.worker worker --pool=gevent --concurrency=500 --loglevel=INFO
     depends_on:
       - redis
 
@@ -28,7 +28,7 @@ services:
     build: .
     ports:
       - "8088:8080"
-    cpus: 1.0
+    cpus: 0.25
     mem_limit: "512M"
     volumes:
       - ./:/api
@@ -37,5 +37,34 @@ services:
     env_file:
       - .env
     command: sh -c "uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8080"
+    depends_on:
+      - celery_worker
+
+  locust_worker:
+    build: .
+    ports:
+      - "8089:8089"
+    volumes:
+      - ./:/api
+    environment:
+      DEBUG: "true"
+    env_file:
+      - .env
+    command: sh -c "locust"
+    depends_on:
+      - api
+      - celery_worker
+
+  flower:
+    build: .
+    ports:
+      - "8090:8000"
+    volumes:
+      - ./:/api
+    environment:
+      DEBUG: "true"
+    env_file:
+      - .env
+    command: sh -c "celery -A config.worker flower  --address=0.0.0.0 --port=8000"
     depends_on:
       - celery_worker

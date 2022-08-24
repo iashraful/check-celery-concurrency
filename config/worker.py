@@ -4,11 +4,11 @@ from pkgutil import iter_modules
 
 from celery import Celery
 
-# BROKER = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/2"
-# BACKEND = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/2"
+BROKER = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/2"
+BACKEND = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/2"
 
-BROKER = "redis://localhost:6382/2"
-BACKEND = "redis://localhost:6382/2"
+# BROKER = "redis://localhost:6382/2"
+# BACKEND = "redis://localhost:6382/2"
 
 
 def find_task_modules():
