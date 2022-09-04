@@ -68,3 +68,12 @@ services:
     command: sh -c "celery -A config.worker flower  --address=0.0.0.0 --port=8000"
     depends_on:
       - celery_worker
+
+  celery_monitoring:
+    image: danihodovic/celery-exporter
+    ports:
+      - "8091:9808"
+    env_file:
+      - ./.env
+    command:
+      - "--broker-url=redis://redis:6379/2"
