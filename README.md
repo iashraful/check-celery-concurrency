@@ -26,6 +26,14 @@ Let's say you have no CPU bound tasks. Just thousands of HTTP calls. Then it's h
 * Redis
     * Redis as celery broker and backend
 
+#### Additional Materials
+* Celery Exporter
+    * Prometheus compatable exporter
+* Prometheus
+    * Prometheus for pulling the tasks status. Also alert can be configurable.
+* Grafana
+    * A interactive dashboard for celery tasks status. 
+
 ### Concurrency with `gevent`
 * Install with `pip install gevent`
 * Change the `docker-compose.yml` like following,
