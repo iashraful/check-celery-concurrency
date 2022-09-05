@@ -73,7 +73,27 @@ services:
     image: danihodovic/celery-exporter
     ports:
       - "8091:9808"
-    env_file:
-      - ./.env
     command:
       - "--broker-url=redis://redis:6379/2"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+    ports:
+      - "8092:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    user: "$UID:$GID"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=password
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_DOMAIN=localhost
+      - GF_SMTP_ENABLED=false
+    ports:
+      - "8093:3000"
