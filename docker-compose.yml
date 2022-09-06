@@ -1,28 +1,6 @@
 version: "3.8"
 
 services:
-  celery_worker:
-    restart: always
-    build:
-      context: .
-    volumes:
-      - ./:/api
-    env_file:
-      - .env
-    cpus: 0.25
-    mem_limit: "512M"
-    command: celery -A config.worker worker --pool=eventlet --concurrency=500 --loglevel=INFO
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:6.2.6
-    ports:
-      - "6382:6379"
-    env_file:
-      - .env
-    command: redis-server
-
   api:
     restart: always
     build: .
@@ -37,8 +15,40 @@ services:
     env_file:
       - .env
     command: sh -c "uvicorn main:app --reload --workers 1 --host 0.0.0.0 --port 8080"
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "6382:6379"
+    env_file:
+      - .env
+    command: redis-server
+  celery_worker:
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./:/api
+    env_file:
+      - .env
+    cpus: 0.25
+    mem_limit: "512M"
+    command: celery -A config.celery worker --pool=eventlet --concurrency=500 --loglevel=INFO
     depends_on:
-      - celery_worker
+      - redis
+
+  celery_beat:
+    restart: always
+    volumes:
+      - ./:/api
+    build:
+      context: .
+    env_file:
+      - .env
+    cpus: 0.25
+    mem_limit: "512M"
+    command: celery -A config.celery beat --loglevel=DEBUG
+    depends_on:
+      - redis
 
   locust_worker:
     build: .
@@ -65,7 +75,7 @@ services:
       DEBUG: "true"
     env_file:
       - .env
-    command: sh -c "celery -A config.worker flower  --address=0.0.0.0 --port=8000"
+    command: sh -c "celery -A config.celery flower  --address=0.0.0.0 --port=8000"
     depends_on:
       - celery_worker
 

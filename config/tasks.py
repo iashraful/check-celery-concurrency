@@ -1,5 +1,6 @@
 import time
-from .worker import celery as celery_app
+from .celery import celery as celery_app
+from celery import shared_task
 import requests
 
 
@@ -12,3 +13,10 @@ def call_thirdparty_api():
         print("Response Failed")
 
     time.sleep(10)
+
+
+@shared_task
+def scheduled_task():
+    print("Scheduled Task Started.")
+    time.sleep(5)
+    print("Scheduled Tasks Ended.")
