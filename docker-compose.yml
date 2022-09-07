@@ -46,7 +46,7 @@ services:
       - .env
     cpus: 0.25
     mem_limit: "512M"
-    command: celery -A config.celery beat --loglevel=DEBUG
+    command: celery -A config.celery beat -S redbeat.RedBeatScheduler --loglevel=DEBUG
     depends_on:
       - redis
 

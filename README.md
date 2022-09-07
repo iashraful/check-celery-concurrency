@@ -46,7 +46,7 @@ celery -A config.worker worker --pool=gevent --concurrency=500 --loglevel=INFO
 * Install with `pip install eventlet`
 * Change the `docker-compose.yml` like following,
 ```
-celery -A config.worker worker --pool=evemtlet --concurrency=500 --loglevel=INFO
+celery -A config.worker worker --pool=eventlet --concurrency=500 --loglevel=INFO
 ```
 * `--concurrency=500` means you can able to handle 500 concurrent tasks. So, you can update the value from here.
 
@@ -58,3 +58,13 @@ celery -A config.worker worker --pool=evemtlet --concurrency=500 --loglevel=INFO
     * If you run on docker then you might need `http://api:8080` as a server url while configuring the Locust.
 * `http://localhost:8090` is the Flower(Celery monitoring tool).
 
+### RedBeat (Celery Beat Scheduler)
+* Create task dynamically
+```python
+from celery.schedules import crontab
+from config.celery import celery as celery_app
+from redbeat import RedBeatSchedulerEntry as Entry
+
+e = Entry(name='my-task-1', task='config.tasks.scheduled_task', schedule=crontab(minute="*/2"), args=(), app=celery_app)
+e.save()
+```
