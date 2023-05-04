@@ -1,6 +1,5 @@
 import time
 from .celery import celery as celery_app
-from celery import shared_task
 import requests
 
 
@@ -15,7 +14,7 @@ def call_thirdparty_api():
     time.sleep(10)
 
 
-@shared_task
+@celery_app.task
 def scheduled_task():
     print("Scheduled Task Started.")
     time.sleep(5)

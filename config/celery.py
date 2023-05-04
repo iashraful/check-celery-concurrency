@@ -5,7 +5,7 @@ from pkgutil import iter_modules
 from celery import Celery
 from config.beat_schedule import CELERY_BEAT_SCHEDULE
 
-BROKER = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/1"
+BROKER = f"amqp://{os.environ.get('RABBITMQ_HOST', default='rabbitmq')}:{os.environ.get('RABBITMQ_PORT', default=5672)}"
 BACKEND = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/2"
 REDBEAT_BACKEND = f"redis://{os.environ.get('REDIS_HOST', default='redis')}:{os.environ.get('REDIS_PORT', default=6379)}/3"
 
