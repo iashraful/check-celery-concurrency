@@ -15,6 +15,16 @@ def call_thirdparty_api():
 
 
 @celery_app.task
+def data_processing_task(payload: dict):
+    print(f"Task received at {time.time()}")
+    total_items = 0
+    # Just looping over the data. Fake process
+    for _ in range(payload.get("length", 0)):
+        total_items += 1
+    print(f"Total count: {total_items}")
+
+
+@celery_app.task
 def scheduled_task():
     print("Scheduled Task Started.")
     time.sleep(5)

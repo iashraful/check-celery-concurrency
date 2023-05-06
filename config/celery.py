@@ -18,8 +18,8 @@ def find_task_modules():
 celery = Celery(__name__, broker=BROKER, backend=BACKEND)
 celery.autodiscover_tasks(find_task_modules())
 celery.conf.beat_schedule = CELERY_BEAT_SCHEDULE
-celery.conf.worker_send_task_events = True
-celery.conf.task_send_sent_event = True
+celery.conf.worker_send_task_events = False
+celery.conf.task_send_sent_event = False
 celery.conf.redbeat_redis_url = REDBEAT_BACKEND
 
 
